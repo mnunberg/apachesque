@@ -1,0 +1,15 @@
+=head1 Apachesque
+
+Configuration Library for Parsing Apache-like config files
+
+=head2 DESCRIPTION
+
+I wrote this rather inefficient library because I needed a nice
+way to parse structured configuration files.
+
+INI-style files are too simple, and I didn't find much out there
+for ISC-style configuration files other than libConfuse, which
+itself did not seem very promising.
+
+See the src/apesq.h header file for the API and src/test.c for
+usage
