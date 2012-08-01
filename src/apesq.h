@@ -60,6 +60,10 @@ enum {
     APESQ_F_MULTIOK = 0x2
 };
 
+#ifndef APESQ_API
+#define APESQ_API
+#endif
+
 struct apesq_entry_st;
 struct apesq_section_st {
     /* section type */
@@ -113,16 +117,19 @@ struct apesq_entry_st {
  * @param nstr length of the string, or -1 to have strlen called on it. (non-NUL
  * terminated strings are not supported here anyway, so this should
  */
+APESQ_API
 struct apesq_entry_st *
 apesq_parse_string(char *str, int nstr);
 
 /* wrapper around parse_string */
+APESQ_API
 struct apesq_entry_st *
 apesq_parse_file(const char *path);
 
 /**
  * Frees a configuration tree
  */
+APESQ_API
 void
 apesq_free(struct apesq_entry_st *root);
 
@@ -133,6 +140,7 @@ apesq_free(struct apesq_entry_st *root);
  *
  * @return a null-terminated array of pointers to T_SECTION entries
  */
+APESQ_API
 struct apesq_entry_st **
 apesq_get_sections(struct apesq_entry_st *root, const char *name);
 
@@ -145,6 +153,7 @@ apesq_get_sections(struct apesq_entry_st *root, const char *name);
  * @param section the section (see APESQ_SECTION)
  * @param key the key for which to read the values
  */
+APESQ_API
 struct apesq_value_st *
 apesq_get_values(struct apesq_section_st *section, const char *key);
 
@@ -169,6 +178,7 @@ apesq_get_values(struct apesq_section_st *section, const char *key);
  * @return A status code (APESQ_VALUE_*), should be 'OK' if the conversion
  * was successful, or an error otherwise.
  */
+APESQ_API
 int
 apesq_read_value(struct apesq_section_st *section,
                  const void *param,
@@ -179,6 +189,7 @@ apesq_read_value(struct apesq_section_st *section,
 /**
  * Dump a tree repres
  */
+APESQ_API
 void
 apesq_dump_section(struct apesq_entry_st *root, int indent);
 

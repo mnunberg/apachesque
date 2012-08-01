@@ -1,4 +1,7 @@
+#ifndef APESQ_NO_INCLUDE
 #include "apesq.h"
+#endif /* APESQ_NO_INCLUDE */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -357,6 +360,7 @@ parse_line(char *line,
 #undef LINE_ERROR
 }
 
+APESQ_API
 struct apesq_entry_st *
 apesq_parse_string(char *str, int nstr)
 {
@@ -383,14 +387,26 @@ apesq_parse_string(char *str, int nstr)
 
     while (*p) {
         char *errp = NULL;
+        char *line_end;
 
         line = p;
 
         for (; p < end && *p != '\n'; p++);
         *p = '\0';
+        line_end = p-1;
 
+        /* strip leading whitespace */
         for (; line < p && isspace(*line); line++);
+
+        /* strip trailing whitespace */
+        while (line_end > line && isspace(*line_end)) {
+            *line_end = '\0';
+            line_end--;
+        }
+
+        /* pointer to the beginning of the next line */
         p++;
+
 
         if (*line == '#' || line == p-1) {
             continue;
@@ -409,6 +425,7 @@ apesq_parse_string(char *str, int nstr)
     return root;
 }
 
+APESQ_API
 struct apesq_entry_st *
 apesq_parse_file(const char *path)
 {
@@ -447,6 +464,7 @@ apesq_parse_file(const char *path)
     return ret;
 }
 
+APESQ_API
 void
 apesq_dump_section(struct apesq_entry_st *root, int indent)
 {
@@ -505,6 +523,7 @@ apesq_dump_section(struct apesq_entry_st *root, int indent)
     }
 }
 
+APESQ_API
 void
 apesq_free(struct apesq_entry_st *root)
 {
@@ -575,6 +594,7 @@ apesq_free(struct apesq_entry_st *root)
  * apesq_find_section(root, "/Subsys")
  */
 
+APESQ_API
 struct apesq_entry_st **
 apesq_get_sections(struct apesq_entry_st *root, const char *name)
 {
@@ -613,17 +633,13 @@ apesq_get_sections(struct apesq_entry_st *root, const char *name)
     return ret;
 }
 
+APESQ_API
 struct apesq_value_st *
 apesq_get_values(struct apesq_section_st *section, const char *key)
 {
     struct apesq_entry_st *ent = section->e_head;
 
     while (ent) {
-
-        if (ent->key) {
-            printf("Checking.. %s\n", ent->key);
-        }
-
         if (ent->key && strcmp(key, ent->key) == 0) {
             return &ent->value;
         }
@@ -633,6 +649,7 @@ apesq_get_values(struct apesq_section_st *section, const char *key)
     return NULL;
 }
 
+APESQ_API
 int
 apesq_read_value(struct apesq_section_st *section,
                  const void *param,
